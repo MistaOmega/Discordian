@@ -1,0 +1,6 @@
+{
+  "channel": "<channelID>",
+  "roles": {
+    "customEmojiName": "<roleID>"
+  }
+}
