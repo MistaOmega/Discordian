@@ -1,6 +1,8 @@
 const {Client} = require("discord.js");
 const fs = require("fs");
 
+const path = require('path')
+
 const client = new Client({ partials: ['MESSAGE'] });
 const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
@@ -30,6 +32,23 @@ async function onReady(){
         },
         status: 'online'
     });
+
+    const commandBaseFile = 'base_command.js'
+    const base_command = require(`./commands/${commandBaseFile}`)
+
+    const readAllCommands = dir =>{
+        const files = fs.readdirSync(path.join(__dirname, dir))
+        for (const file of files){
+            const stat = fs.lstatSync(path.join(__dirname, dir, file))
+            if(stat.isDirectory()){
+                readAllCommands(file.join(dir, file))
+            } else if(file !== commandBaseFile){
+                const option = require(path.join(__dirname, dir, file))
+                console.log(file, option)
+                base_command(client, option)
+            }
+        }
+    }
 
 }
 
